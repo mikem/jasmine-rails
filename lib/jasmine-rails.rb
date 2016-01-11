@@ -55,7 +55,7 @@ module JasmineRails
       files += filter_files src_dir, jasmine_config['src_files']
       spec_dir.each do |dir|
         files += filter_files dir, jasmine_config['helpers']
-        files += filter_files dir, jasmine_config['spec_files']
+        files += filter_files dir, jasmine_config['spec_files'], false
       end
       files
     end
@@ -132,12 +132,12 @@ module JasmineRails
       end
     end
 
-    def filter_files(root_dir, patterns)
+    def filter_files(root_dir, patterns, strip_root_dir = true)
       files = patterns.to_a.collect do |pattern|
         Dir.glob(root_dir.join(pattern)).sort
       end
       files = files.flatten
-      files = files.collect {|f| f.gsub(root_dir.to_s + '/', '') }
+      files = files.collect {|f| f.gsub(root_dir.to_s + '/', '') } if strip_root_dir
       files || []
     end
 
